@@ -1,14 +1,9 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 // Define the MongoDB URI from environment variables
 const MONGODB_URI = process.env.MONGODB_URI;
 
 // Validate that the MongoDB URI is defined
-if (!MONGODB_URI) {
-  throw new Error(
-    'Please define the MONGODB_URI environment variable inside .env.local'
-  );
-}
 
 // Define TypeScript interface for the cached connection
 interface MongooseCache {
@@ -46,6 +41,11 @@ async function connectDB(): Promise<typeof mongoose> {
     const opts = {
       bufferCommands: false, // Disable Mongoose buffering
     };
+    if (!MONGODB_URI) {
+      throw new Error(
+        "Please define the MONGODB_URI environment variable inside .env.local"
+      );
+    }
 
     cached.promise = mongoose.connect(MONGODB_URI, opts).then((mongoose) => {
       return mongoose;
