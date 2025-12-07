@@ -1,9 +1,16 @@
 
 import EventCard from "@/components/EventCard";
 import ExploreBtn from "@/components/ExploreBtn";
-import events from "@/lib/constants";
+import { IEvent } from "@/database";
+import { cacheLife } from "next/cache";
 
-export default function Home() {
+
+export default  async function Home() {
+  'use cache';
+   cacheLife('hours')
+   const response= await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/events`)
+   const {events}=await response.json()
+
  
  
   return (
@@ -15,7 +22,7 @@ export default function Home() {
       <h3>Feature Events</h3>
       <ul className="events">
         {
-          events.map((event)=>(
+         events && events.length>0 &&  events.map((event: IEvent)=>(
             <li className="list-type-none" key={event.title}>
               <EventCard {...event}/>
               
@@ -25,6 +32,7 @@ export default function Home() {
         }
 
       </ul>
+   
 
     </div>
    </section>
